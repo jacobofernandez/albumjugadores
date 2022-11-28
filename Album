@@ -1,0 +1,85 @@
+package src.albumes;
+import java.io.*;
+import java.util.*;
+
+public class Album{
+
+	private ArrayList<Jugador> album = new ArrayList<>();	
+	private String nombreFichero = "jugadores.txt";
+	
+	
+	public Album() {
+		cargarJugador();
+	}
+
+	public void add(Jugador v){
+		album.add(v);
+	}
+	
+	public void annadir(Jugador v){
+		album.add(v);
+		volcarJugadores();
+ 		System.out.println("Jugador incluido o modificado de manera correcta.");
+	}
+	
+	// Permite borrar objetos del ArrayList 
+	public void borrar(Jugador v){
+		album.remove(v);
+		volcarJugadores();
+		System.out.println("Jugador borrado de manera correcta.");
+	}
+	
+	// Lee el fichero en el que se guardaban los objetos y este convierte las líneas de chars en objetos que guaradar en el array
+	private void cargarJugadores(){
+			try{
+				File fichero = new File(nombreFichero);
+				fichero.createNewFile(); 
+				Scanner sc = new Scanner(fichero);
+				sc.useDelimiter(",|\n");
+				while(sc.hasNext()){
+					album.add(new Seleccion (sc.next(), sc.next(), sc.nextInt()));
+				}
+		}catch(IOException ex){
+			System.out.println("El album se encuentra vacio en este momento");
+		}
+	}
+	
+	// Nos permite escribir en un fichero .txt los objetos del array para así ppoder guardarse pese al cierre del programa
+	private void volcarSelecciones(){
+		try{
+			FileWriter fw = new FileWriter(nombreFichero);
+			for(Jugador v : album){
+				fw.write(v.getNombre() + "\n");
+				fw.write(v.getNumero() + "\n");
+				fw.write(v.getPosicion() + "\n");
+
+			}
+			
+			fw.close();
+		}catch(IOException ex){
+			System.err.print(ex);
+		}
+	}
+	
+	// Nos genera una hoja de calculo que guarda los jugadores y sus atributos
+	public void generarHojaCalculo(){
+		try{
+			FileWriter fw = new FileWriter(nombreFichero);
+			fw.write("Nombre,Numero,Posicion\n");
+			fw.write(toString().trim());
+			fw.close();
+                  }catch(IOException ex){
+			  System.err.println(ex);
+		  }
+	}
+
+
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		for(Jugador v  : album)
+		sb.append(v + "\n");
+
+	return sb.toString();
+	}	
+}
+
